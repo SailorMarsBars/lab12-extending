@@ -112,7 +112,7 @@ class Server:
             self.logger.error(f"A fatal error occurred during execution: {e}")
             return jsonify(error="Internal server error"), 500
 
-        @app.route("/genz-preview", methods=["GET"])
+        @self.app.route("/genz-preview", methods=["GET"])
         def genz_preview():
             """Return example Gen-Z anonymization output."""
             data = {
@@ -122,29 +122,25 @@ class Server:
             }
             return jsonify(data), 200
 
-        @app.route("/genz", methods=["POST"])
+        @self.app.route("/genz", methods=["POST"])
         def genz():
             """Anonymize the given text using the Gen-Z operator."""
-
             # 1. Parse the JSON request body
             content = request.get_json()
             if not content:
                 return jsonify({"error": "Invalid JSON"}), 400
-
+            
             text = content.get("text")
             analyzer_results = content.get("analyzer_results")
 
             # 2. Call the AnonymizerEngine
-            # We define the operators to use 'genz' for everything.
             try:
                 anonymizer_result = self.engine.anonymize(
                     text=text,
                     analyzer_results=analyzer_results,
                     operators={"DEFAULT": {"type": "genz"}}
                 )
-
-                # 3. Return the result in the format expected by the grading script
-                # .to_json() provides the 'text' and 'items' structure automatically
+                # 3. Return the result in the format expected
                 return anonymizer_result.to_json(), 200
             except Exception as e:
                 return jsonify({"error": str(e)}), 500
