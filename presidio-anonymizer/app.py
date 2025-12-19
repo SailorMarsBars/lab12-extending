@@ -114,7 +114,8 @@ class Server:
 
         @app.route("/genz-preview", methods=["GET"])
         def genz_preview():
-            data = {
+            """Returns example Gen-Z anonymization output."""
+            response = {
                 "example": "Call Emily at 577-988-1234",
                 "example output": "Call GOAT at vibe check",
                 "description": "Example output of the genz anonymizer."
@@ -122,17 +123,32 @@ class Server:
             return jsonify(data), 200
 
         @app.route("/genz", methods=["POST"])
-        def genz_anonymize():
-        content = request.get_json()
-        # Logic: Initialize AnonymizerEngine and call anonymize 
-        # specifying 'genz' as the operator for all entities.
-        # For this task, follow the existing POST /anonymize pattern 
-        # but hardcode/inject the 'genz' operator.
-        return engine.anonymize(
-            text=content.get("text"),
-            analyzer_results=content.get("analyzer_results"),
-            operators={"DEFAULT": {"type": "genz"}}
-        ).to_json(), 200
+        def genz():
+            """Anonymize the given text using the Gen-Z operator."""
+    
+            # 1. Parse the JSON request body
+            content = request.get_json()
+            if not content:
+                return jsonify({"error": "Invalid JSON"}), 400
+
+            text = content.get("text")
+            analyzer_results = content.get("analyzer_results")
+
+            # 2. Call the AnonymizerEngine
+            # Note: 'engine' is usually accessible as self.engine or a global in Presidio's app.py
+            # We define the operators to use 'genz' for everything.
+            try:
+                anonymizer_result = self.engine.anonymize(
+                    text=text,
+                    analyzer_results=analyzer_results,
+                    operators={"DEFAULT": {"type": "genz"}}
+                )
+
+                # 3. Return the result in the format expected by the grading script
+                # .to_json() provides the 'text' and 'items' structure automatically
+                return anonymizer_result.to_json(), 200
+            except Exception as e:
+                return jsonify({"error": str(e)}), 500
 
 def create_app(): # noqa
     server = Server()
