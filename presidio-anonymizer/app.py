@@ -129,7 +129,7 @@ class Server:
             content = request.get_json()
             if not content:
                 return jsonify({"error": "Invalid JSON"}), 400
-            
+
             text = content.get("text")
             analyzer_results = content.get("analyzer_results")
 
