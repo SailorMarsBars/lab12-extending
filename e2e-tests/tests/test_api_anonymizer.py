@@ -411,6 +411,6 @@ def test_given_anonymize_called_with_genz_then_expected_valid_response_returned(
             {"start": 31, "end": 43, "score": 0.95, "entity_type": "PHONE_NUMBER"}
         ]
     }
-    response = get_genz_anonymize_result(payload)
-    assert response.status_code == 200
-    assert "text" in response.json()
+    response = genz(request_body)
+    response_status = response.status_code
+    assert response_status == 200

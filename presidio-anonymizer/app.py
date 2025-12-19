@@ -114,8 +114,8 @@ class Server:
 
         @app.route("/genz-preview", methods=["GET"])
         def genz_preview():
-            """Returns example Gen-Z anonymization output."""
-            response = {
+            """Return example Gen-Z anonymization output."""
+            data = {
                 "example": "Call Emily at 577-988-1234",
                 "example output": "Call GOAT at vibe check",
                 "description": "Example output of the genz anonymizer."
@@ -125,7 +125,7 @@ class Server:
         @app.route("/genz", methods=["POST"])
         def genz():
             """Anonymize the given text using the Gen-Z operator."""
-    
+
             # 1. Parse the JSON request body
             content = request.get_json()
             if not content:
@@ -135,7 +135,6 @@ class Server:
             analyzer_results = content.get("analyzer_results")
 
             # 2. Call the AnonymizerEngine
-            # Note: 'engine' is usually accessible as self.engine or a global in Presidio's app.py
             # We define the operators to use 'genz' for everything.
             try:
                 anonymizer_result = self.engine.anonymize(

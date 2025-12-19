@@ -52,3 +52,8 @@ def __get_multipart_form_data(file):
 #helper method to call new endpoint
 def get_genz_anonymize_result(payload):
     return requests.post(f"{BASE_URL}/genz", json=payload)
+
+def genz(request_body):
+    """Call the genz anonymizer endpoint."""
+    # Ensure BASE_URL is defined in this file (usually it is)
+    return requests.post(f"{BASE_URL}/genz", json=request_body)
