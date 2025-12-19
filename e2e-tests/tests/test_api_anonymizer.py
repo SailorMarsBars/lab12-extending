@@ -401,3 +401,16 @@ def test_overlapping_keep_both():
 
     assert response_status == 200
     assert equal_json_strings(expected_response, response_content)
+
+#new test case added
+def test_given_anonymize_called_with_genz_then_expected_valid_response_returned():
+    payload = {
+        "text": "Please contact Emily Carter at 734-555-9284",
+        "analyzer_results": [
+            {"start": 15, "end": 27, "score": 0.3, "entity_type": "PERSON"},
+            {"start": 31, "end": 43, "score": 0.95, "entity_type": "PHONE_NUMBER"}
+        ]
+    }
+    response = get_genz_anonymize_result(payload)
+    assert response.status_code == 200
+    assert "text" in response.json()

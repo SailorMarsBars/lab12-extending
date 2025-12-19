@@ -112,6 +112,28 @@ class Server:
             self.logger.error(f"A fatal error occurred during execution: {e}")
             return jsonify(error="Internal server error"), 500
 
+        @app.route("/genz-preview", methods=["GET"])
+        def genz_preview():
+            data = {
+                "example": "Call Emily at 577-988-1234",
+                "example output": "Call GOAT at vibe check",
+                "description": "Example output of the genz anonymizer."
+            }
+            return jsonify(data), 200
+
+        @app.route("/genz", methods=["POST"])
+        def genz_anonymize():
+        content = request.get_json()
+        # Logic: Initialize AnonymizerEngine and call anonymize 
+        # specifying 'genz' as the operator for all entities.
+        # For this task, follow the existing POST /anonymize pattern 
+        # but hardcode/inject the 'genz' operator.
+        return engine.anonymize(
+            text=content.get("text"),
+            analyzer_results=content.get("analyzer_results"),
+            operators={"DEFAULT": {"type": "genz"}}
+        ).to_json(), 200
+
 def create_app(): # noqa
     server = Server()
     return server.app

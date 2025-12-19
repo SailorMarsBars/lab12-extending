@@ -48,3 +48,7 @@ def __get_multipart_form_data(file):
             "image": (file.name, file, "multipart/form-data"),
         }
     return multipart_form_data
+
+#helper method to call new endpoint
+def get_genz_anonymize_result(payload):
+    return requests.post(f"{BASE_URL}/genz", json=payload)
